@@ -1,14 +1,14 @@
 ### 1. **Bridge.sol**
 - **Summary**: Analyzed for common Solidity vulnerabilities.
 - **Vulnerability Details**:
-  - **Reentrancy Risk**: External call may lead to reentrancy.
+  - **Reentrancy Risk**: SWC-107: External call may lead to reentrancy. 
 
     ```solidity
     (bool success, ) = targetContract.call{value: amount}(data);
     ```
     **Line**: 45
 
-  - **Unchecked Arithmetic**: Subtraction may cause underflow.
+  - **Unchecked Arithmetic**: SWC-101: Subtraction may cause underflow.
 
     ```solidity
     uint256 newBalance = currentBalance - withdrawalAmount;
@@ -30,14 +30,14 @@
 ### 2. **Escrow.sol**
 - **Summary**: Analyzed for common Solidity vulnerabilities.
 - **Vulnerability Details**:
-  - **Reentrancy Attack Potential**: External call may lead to reentrancy.
+  - **Reentrancy Attack Potential**: SWC-107: xternal call may lead to reentrancy.
   
     ```solidity
     (bool sent, ) = recipient.call{value: amount}("");
     ```
     **Line**: 85
   
-  - **Access Control**: Weak access control.
+  - **Access Control**: SWC-119: Weak access control.
 
     ```solidity
     require(msg.sender == owner, "Unauthorized access");
@@ -60,7 +60,7 @@
 ### 3. **IStarklane.sol**
 - **Summary**: Interface file, defines core functionalities.
 - **Vulnerability Details**: 
-  - **Interface Requirements**: Ensure implementing contracts validate all parameters.
+  - **Interface Requirements**: SWC-131: Ensure implementing contracts validate all parameters.
 
     ```solidity
     function bridgeTokens(uint256 amount) external;
