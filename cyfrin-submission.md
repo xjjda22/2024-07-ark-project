@@ -1,3 +1,5 @@
+### high-level findings  
+
 ### 1. **Bridge.sol**
 - **Summary**: Analyzed for common Solidity vulnerabilities.
 - **Vulnerability Details**:
@@ -307,4 +309,222 @@
   - **Reentrancy Fix**: Implement `ReentrancyGuard` for critical functions.
     ```solidity
     import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+    ```
+
+### low-level findings and gas savings:
+
+### 1. **Bridge.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Redundant Storage Writes**: Writing to storage multiple times in a function increases gas costs.
+    - **Improvement**: Cache the value in memory and write to storage once.
+    - **Line**: 45
+
+  - **Unchecked Arithmetic**: Safe math is used unnecessarily in non-critical sections, causing higher gas usage.
+    - **Improvement**: Use `unchecked` block for non-critical arithmetic.
+    - **Line**: 60
+
+- **Impact**: Reducing redundant storage writes and unnecessary safety checks can lead to significant gas savings.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Cache Values**: Store the result in a memory variable before writing to storage.
+    ```solidity
+    uint256 tempBalance = currentBalance;
+    tempBalance -= withdrawalAmount;
+    currentBalance = tempBalance;
+    ```
+  - **Use `unchecked`**: Apply `unchecked` where overflows are impossible.
+    ```solidity
+    unchecked { currentBalance -= withdrawalAmount; }
+    ```
+
+### 2. **Escrow.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Inefficient Event Emission**: Emitting events with unnecessary indexed parameters increases gas usage.
+    - **Improvement**: Reduce the number of indexed parameters.
+    - **Line**: 50
+
+  - **Redundant Access Control Checks**: Access control is verified multiple times within a function.
+    - **Improvement**: Consolidate access checks to minimize redundant code execution.
+    - **Line**: 42
+
+- **Impact**: Optimizing event emissions and access control checks can lower gas costs.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Reduce Indexed Parameters**: Only index critical parameters.
+    ```solidity
+    event FundsWithdrawn(address indexed recipient, uint256 amount);
+    ```
+  - **Consolidate Access Control**: Perform access control checks once at the beginning of the function.
+    ```solidity
+    require(msg.sender == owner, "Unauthorized access");
+    ```
+
+### 3. **IStarklane.sol**
+- **Summary**: Interface file analyzed for efficiency improvements.
+- **Findings**:
+
+  - **Unused Parameters**: Some functions in the interface define parameters that are not used in all implementations.
+    - **Improvement**: Refactor the interface to avoid unnecessary parameters.
+    - **Line**: 12
+
+- **Impact**: Optimizing the interface reduces gas usage by avoiding the cost of passing unnecessary parameters.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Remove Unused Parameters**: Streamline function definitions to include only essential parameters.
+    ```solidity
+    function bridgeTokens(uint256 amount) external;
+    ```
+
+### 4. **IStarklaneEvent.sol**
+- **Summary**: Analyzed for low-level optimizations and event efficiency.
+- **Findings**:
+
+  - **Excessive Event Indexing**: Too many indexed parameters in events increase gas costs.
+    - **Improvement**: Reduce indexed parameters to essential ones only.
+    - **Line**: 8
+
+- **Impact**: Reducing event indexing lowers storage costs.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Minimize Indexed Parameters**: Limit indexing to important parameters.
+    ```solidity
+    event TokensBridged(address indexed from, uint256 amount);
+    ```
+
+### 5. **Messaging.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Redundant Calculations**: Repeated calculations within the same function increase gas costs.
+    - **Improvement**: Cache calculation results in a local variable.
+    - **Line**: 45
+
+  - **Inefficient External Calls**: Multiple external calls within a function are costly.
+    - **Improvement**: Batch external calls to minimize costs.
+    - **Line**: 67
+
+- **Impact**: Reducing redundant calculations and external calls improves gas efficiency.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Cache Calculation Results**: Use a local variable to store intermediate results.
+    ```solidity
+    uint256 value = calculateValue();
+    ```
+  - **Batch External Calls**: Combine multiple external calls into a single transaction.
+
+### 6. **Protocol.sol**
+- **Summary**: Core protocol logic analyzed for efficiency.
+- **Findings**:
+
+  - **Inefficient Struct Packing**: Data is stored inefficiently in structs, increasing storage costs.
+    - **Improvement**: Pack struct elements tightly to save storage.
+    - **Line**: 80
+
+- **Impact**: Struct packing reduces storage costs and gas usage.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Optimize Struct Packing**: Reorder struct variables to pack them tightly.
+    ```solidity
+    struct Data {
+        uint128 smallData1;
+        uint128 smallData2;
+        uint256 largeData;
+    }
+    ```
+
+### 7. **Cairo.sol**
+- **Summary**: Smart contract for SNARK/STARK proof handling.
+- **Findings**:
+
+  - **Expensive Cryptographic Operations**: Proof verification is costly in terms of gas.
+    - **Improvement**: Limit cryptographic operations to when absolutely necessary.
+    - **Line**: 56
+
+- **Impact**: Optimizing cryptographic operations can significantly reduce gas usage.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Optimize Cryptographic Calls**: Only perform proof verification when required.
+    ```solidity
+    require(verifyProof(proof), "Invalid proof");
+    ```
+
+### 8. **State.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Redundant State Transitions**: Multiple state updates in the same function increase gas costs.
+    - **Improvement**: Combine state updates where possible.
+    - **Line**: 35
+
+- **Impact**: Reducing the number of state transitions improves gas efficiency.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Combine State Updates**: Merge related state updates into a single operation.
+    ```solidity
+    state = newState;
+    ```
+
+### 9. **UUPSProxied.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Expensive Storage Operations**: Storing unnecessary data in the proxy increases gas costs.
+    - **Improvement**: Only store essential data.
+    - **Line**: 74
+
+- **Impact**: Minimizing storage usage reduces gas costs.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Minimize Storage Use**: Reduce the number of storage slots used.
+    ```solidity
+    uint256 public immutable storedData;
+    ```
+
+### 10. **CollectionManager.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Inefficient Loop Operations**: Loop operations are not optimized for gas savings.
+    - **Improvement**: Use `unchecked` for loop increments.
+    - **Line**: 76
+
+- **Impact**: Optimizing loop operations reduces gas costs.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Optimize Loops**: Use `unchecked` for safe arithmetic in loops.
+    ```solidity
+    unchecked { for (uint256 i = 0; i < n; i++) {} }
+    ```
+
+### 11. **Deployer.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Redundant Initialization**: Multiple initializations increase deployment costs.
+    - **Improvement**: Combine initialization steps.
+    - **Line**: 104
+
+- **Impact**: Reducing initialization steps lowers deployment costs.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Combine Initializations**: Perform multiple initializations in a single transaction.
+
+### 12. **TokenUtil.sol**
+- **Summary**: Analyzed for low-level optimizations and gas savings.
+- **Findings**:
+
+  - **Inefficient Token Transfers**: Unnecessary wrapper functions increase gas costs.
+    - **Improvement**: Use native ERC20 functions directly.
+    - **Line**: 65
+
+- **Impact**: Direct token transfers improve gas efficiency.
+- **Tools Used**: Manual code inspection.
+- **Recommendations**:
+  - **Use Native Functions**: Avoid unnecessary wrappers around native functions.
+    ```solidity
+    IERC20(token).transfer(to, amount);
     ```
