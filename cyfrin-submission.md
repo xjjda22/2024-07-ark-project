@@ -4,7 +4,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 ### high-level findings  
 
 ### 1. **Bridge.sol**
-- **Summary**: Analyzed for common Solidity vulnerabilities.
+- **Summary**: The Bridge.sol contract has been analyzed for common Solidity vulnerabilities. The analysis identified a reentrancy risk due to an external call and an unchecked arithmetic operation that could lead to an underflow.
 - **Vulnerability Details**:
 
   - **Reentrancy Risk**: SWC-107: External call may lead to reentrancy. 
@@ -34,7 +34,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     ```
 
 ### 2. **Escrow.sol**
-- **Summary**: Analyzed for common Solidity vulnerabilities.
+- **Summary**: The Escrow.sol contract has been analyzed for common Solidity vulnerabilities. The analysis revealed a reentrancy attack potential during an external call and weak access control that could allow unauthorized access.
 - **Vulnerability Details**:
   - **Reentrancy Attack Potential**: SWC-107: xternal call may lead to reentrancy.
   
