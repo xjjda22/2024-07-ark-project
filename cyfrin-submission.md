@@ -8,6 +8,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Vulnerability Details**:
 
   - **Reentrancy Risk**: SWC-107: External call may lead to reentrancy. 
+    **Severity**: High 
 
     ```solidity
     (bool success, ) = targetContract.call{value: amount}(data);
@@ -15,6 +16,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 45
 
   - **Unchecked Arithmetic**: SWC-101: Subtraction may cause underflow.
+    **Severity**: Medium 
 
     ```solidity
     uint256 newBalance = currentBalance - withdrawalAmount;
@@ -36,7 +38,8 @@ An overview of the findings, including the number of vulnerabilities identified 
 ### 2. **Escrow.sol**
 - **Summary**: The Escrow.sol contract has been analyzed for common Solidity vulnerabilities. The analysis revealed a reentrancy attack potential during an external call and weak access control that could allow unauthorized access.
 - **Vulnerability Details**:
-  - **Reentrancy Attack Potential**: SWC-107: xternal call may lead to reentrancy.
+  - **Reentrancy Attack Potential**: SWC-107: External call may lead to reentrancy.
+    **Severity**: High 
   
     ```solidity
     (bool sent, ) = recipient.call{value: amount}("");
@@ -44,6 +47,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 85
   
   - **Access Control**: SWC-119: Weak access control.
+    **Severity**: High
 
     ```solidity
     require(msg.sender == owner, "Unauthorized access");
@@ -67,6 +71,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Interface file, defines core functionalities.
 - **Vulnerability Details**: 
   - **Interface Requirements**: SWC-131: Ensure implementing contracts validate all parameters.
+  **Severity**: Low
 
     ```solidity
     function bridgeTokens(uint256 amount) external;
@@ -82,6 +87,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Interface for events, defines event structures.
 - **Vulnerability Details**: 
   - **Event Emission**: SWC-116: Ensure events are correctly triggered in implementations.
+  **Severity**: Low
 
     ```solidity
     event TokensBridged(address indexed from, uint256 amount);
@@ -97,6 +103,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Messaging contract for cross-component communication.
 - **Vulnerability Details**:
   - **Reentrancy Potential**: SWC-107: External call may lead to reentrancy.
+    **Severity**: Medium
   
     ```solidity
     (bool success, ) = target.call(data);
@@ -104,6 +111,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 67
   
   - **Message Validation**: SWC-136: Input validation is critical.
+    **Severity**: Medium
 
     ```solidity
     require(isValidMessage(msg.sender), "Invalid message sender");
@@ -126,6 +134,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Core protocol logic.
 - **Vulnerability Details**:
   - **Reentrancy**: SWC-107: External call may lead to reentrancy.
+    **Severity**: High
   
     ```solidity
     (bool success, ) = contractAddress.call(data);
@@ -133,6 +142,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 110
 
   - **Unchecked Arithmetic**: SWC-101: Subtraction can cause underflow.
+    **Severity**: Medium
 
     ```solidity
     uint256 newBalance = totalBalance - withdrawalAmount;
@@ -155,6 +165,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: SWC-110: Smart contract for SNARK/STARK proof handling.
 - **Vulnerability Details**:
   - **Proof Verification**: Ensure validation is robust.
+   **Severity**: High
 
     ```solidity
     require(verifyProof(proof), "Invalid proof");
@@ -173,6 +184,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Handles state management.
 - **Vulnerability Details**:
   - **State Transitions**: SWC-123: Enforce valid state transitions.
+    **Severity**: Medium
 
     ```solidity
     require(newState != currentState, "Invalid state transition");
@@ -180,6 +192,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 35
 
   - **Direct State Manipulation**: SWC-124: May allow unauthorized state changes.
+    **Severity**: Medium
 
     ```solidity
     state = newState;
@@ -202,6 +215,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Implements UUPS proxy pattern.
 - **Vulnerability Details**:
   - **Upgradeability Checks**: SWC-112: Ensure only authorized upgrades occur.
+   **Severity**: High
   
     ```solidity
     require(msg.sender == admin, "Unauthorized upgrade");
@@ -209,6 +223,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 74
 
   - **Delegatecall Risks**: SWC-114: Can introduce risks if not handled properly.
+    **Severity**: High
 
     ```solidity
     (bool success, ) = implementation.delegatecall(data);
@@ -231,6 +246,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Analyzed for common Solidity vulnerabilities related to collection management.
 - **Vulnerability Details**:
   - **Reentrancy Attack Potential**: SWC-107: External calls in functions handling collection operations could be vulnerable.
+  **Severity**: Medium
   
     ```solidity
     (bool success, ) = collection.call{value: amount}("");
@@ -238,6 +254,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 76
 
   - **Unchecked Arithmetic**: SWC-101: Operations on collection balances may cause overflows.
+  **Severity**: Medium
 
     ```solidity
     uint256 newBalance = currentBalance - withdrawalAmount;
@@ -260,6 +277,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Analyzed for common Solidity vulnerabilities related to contract deployment.
 - **Vulnerability Details**:
   - **Delegatecall Risks**: SWC-114: Use of `delegatecall` for deploying contracts may introduce risks if not handled carefully.
+  **Severity**: High
   
     ```solidity
     (bool success, ) = implementation.delegatecall(data);
@@ -267,6 +285,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 104
 
   - **Upgradeability Checks**: SWC-112: Potential risk in allowing unauthorized upgrades.
+  **Severity**: High
 
     ```solidity
     require(msg.sender == admin, "Unauthorized upgrade");
@@ -289,6 +308,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Summary**: Analyzed for common Solidity vulnerabilities in utility functions related to tokens.
 - **Vulnerability Details**:
   - **Unchecked Arithmetic**: SWC-101: Potential for arithmetic operations to cause overflows/underflows.
+  **Severity**: Medium
 
     ```solidity
     uint256 newBalance = tokenBalance - amount;
@@ -296,6 +316,7 @@ An overview of the findings, including the number of vulnerabilities identified 
     **Line**: 42
 
   - **Reentrancy Risks**: SWC-107: External calls during token transfers may be vulnerable.
+  **Severity**: High
 
     ```solidity
     (bool success, ) = token.call(abi.encodeWithSignature("transfer(address,uint256)", to, amount));
@@ -321,10 +342,12 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Redundant Storage Writes**: Writing to storage multiple times in a function increases gas costs.
+  **Severity**: Low
     - **Improvement**: Cache the value in memory and write to storage once.
     - **Line**: 45
 
   - **Unchecked Arithmetic**: Safe math is used unnecessarily in non-critical sections, causing higher gas usage.
+  **Severity**: Low
     - **Improvement**: Use `unchecked` block for non-critical arithmetic.
     - **Line**: 60
 
@@ -347,10 +370,12 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Inefficient Event Emission**: Emitting events with unnecessary indexed parameters increases gas usage.
+  **Severity**: Low
     - **Improvement**: Reduce the number of indexed parameters.
     - **Line**: 50
 
   - **Redundant Access Control Checks**: Access control is verified multiple times within a function.
+  **Severity**: Low
     - **Improvement**: Consolidate access checks to minimize redundant code execution.
     - **Line**: 42
 
@@ -371,10 +396,12 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Unused Parameters**: Some functions in the interface define parameters that are not used in all implementations.
+  **Severity**: Low
     - **Improvement**: Refactor the interface to avoid unnecessary parameters.
     - **Line**: 12
 
 - **Impact**: Optimizing the interface reduces gas usage by avoiding the cost of passing unnecessary parameters.
+**Severity**: Low
 - **Tools Used**: Manual code inspection.
 - **Recommendations**:
   - **Remove Unused Parameters**: Streamline function definitions to include only essential parameters.
@@ -387,6 +414,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Excessive Event Indexing**: Too many indexed parameters in events increase gas costs.
+  **Severity**: Low
     - **Improvement**: Reduce indexed parameters to essential ones only.
     - **Line**: 8
 
@@ -403,10 +431,12 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Redundant Calculations**: Repeated calculations within the same function increase gas costs.
+  **Severity**: Low
     - **Improvement**: Cache calculation results in a local variable.
     - **Line**: 45
 
   - **Inefficient External Calls**: Multiple external calls within a function are costly.
+  **Severity**: Low
     - **Improvement**: Batch external calls to minimize costs.
     - **Line**: 67
 
@@ -424,6 +454,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Inefficient Struct Packing**: Data is stored inefficiently in structs, increasing storage costs.
+  **Severity**: Low
     - **Improvement**: Pack struct elements tightly to save storage.
     - **Line**: 80
 
@@ -444,6 +475,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Expensive Cryptographic Operations**: Proof verification is costly in terms of gas.
+  **Severity**: Low
     - **Improvement**: Limit cryptographic operations to when absolutely necessary.
     - **Line**: 56
 
@@ -460,6 +492,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Redundant State Transitions**: Multiple state updates in the same function increase gas costs.
+  **Severity**: Low
     - **Improvement**: Combine state updates where possible.
     - **Line**: 35
 
@@ -476,6 +509,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Expensive Storage Operations**: Storing unnecessary data in the proxy increases gas costs.
+  **Severity**: Low
     - **Improvement**: Only store essential data.
     - **Line**: 74
 
@@ -492,6 +526,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Inefficient Loop Operations**: Loop operations are not optimized for gas savings.
+  **Severity**: Low
     - **Improvement**: Use `unchecked` for loop increments.
     - **Line**: 76
 
@@ -508,6 +543,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Redundant Initialization**: Multiple initializations increase deployment costs.
+  **Severity**: Low
     - **Improvement**: Combine initialization steps.
     - **Line**: 104
 
@@ -521,6 +557,7 @@ An overview of the findings, including the number of vulnerabilities identified 
 - **Findings**:
 
   - **Inefficient Token Transfers**: Unnecessary wrapper functions increase gas costs.
+  **Severity**: Low
     - **Improvement**: Use native ERC20 functions directly.
     - **Line**: 65
 
